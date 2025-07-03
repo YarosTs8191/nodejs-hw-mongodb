@@ -7,5 +7,11 @@ export function setupServer() {
   const app = express();
   app.use(cors());
   app.use(pino());
-  app.use('/contacts', contactsRouter);
+
+  app.use('/api/contacts', contactsRouter);
+
+  // ДОДАЙ ОЦЕ (тільки раз, не дублюй!)
+  app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running on port ${process.env.PORT || 3000}`);
+  });
 }

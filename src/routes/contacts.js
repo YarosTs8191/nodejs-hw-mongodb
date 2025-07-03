@@ -7,6 +7,7 @@ import {
 const router = express.Router();
 
 router.get('/', getAllContacts);
-router.get('/:contactId', getContactById);
+// !! Тут змінити на :id, якщо у контролері req.params.id !!
+router.get('/:id', getContactById);
 
 export default router;
