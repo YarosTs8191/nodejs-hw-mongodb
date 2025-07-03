@@ -2,12 +2,13 @@ import express from 'express';
 import {
   getAllContacts,
   getContactById,
+  createContact,
 } from '../controllers/contactsController.js';
 
 const router = express.Router();
 
 router.get('/', getAllContacts);
-// !! Тут змінити на :id, якщо у контролері req.params.id !!
-router.get('/:id', getContactById);
+router.get('/:contactId', getContactById);
+router.post('/', createContact);
 
 export default router;
