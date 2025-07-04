@@ -7,7 +7,7 @@ export const getAllContacts = async (req, res) => {
     res.json({
       status: 'success',
       code: 200,
-      data: { contacts },
+      data: contacts,
     });
   } catch (error) {
     res.status(500).json({
@@ -35,7 +35,7 @@ export const getContactById = async (req, res) => {
     res.json({
       status: 'success',
       code: 200,
-      data: { contact },
+      data: contact,
     });
   } catch (error) {
     res.status(500).json({
