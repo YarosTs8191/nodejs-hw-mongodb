@@ -1,64 +1,38 @@
-import { Contact } from '../models/contact.js';
+import { getAllContacts, getContactById } from '../services/contacts.js';
 
-// Отримати всі контакти
-export const getAllContacts = async (req, res) => {
+export const getAllContactsController = async (req, res) => {
   try {
-    const contacts = await Contact.find();
-    res.json({
-      status: 'success',
-      code: 200,
+    const contacts = await getAllContacts();
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
       data: contacts,
     });
   } catch (error) {
     res.status(500).json({
-      status: 'error',
-      code: 500,
+      status: 500,
       message: error.message,
     });
   }
 };
 
-// Отримати контакт за id
-export const getContactById = async (req, res) => {
+export const getContactByIdController = async (req, res) => {
   try {
     const { contactId } = req.params;
-    const contact = await Contact.findById(contactId);
+    const contact = await getContactById(contactId);
 
     if (!contact) {
-      return res.status(404).json({
-        status: 'error',
-        code: 404,
-        message: `Contact with id=${contactId} not found`,
-      });
+      return res.status(404).json({ message: 'Contact not found' });
     }
 
-    res.json({
-      status: 'success',
-      code: 200,
+    res.status(200).json({
+      status: 200,
+      message: `Successfully found contact with id ${contactId}!`,
       data: contact,
     });
   } catch (error) {
     res.status(500).json({
-      status: 'error',
-      code: 500,
-      message: error.message,
-    });
-  }
-};
-
-// Створити новий контакт
-export const createContact = async (req, res) => {
-  try {
-    const newContact = await Contact.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      code: 201,
-      data: { contact: newContact },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'error',
-      code: 400,
+      status: 500,
       message: error.message,
     });
   }

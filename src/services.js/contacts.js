@@ -1,9 +1,7 @@
 import { Contact } from '../models/contact.js';
 
-export const getAllContacts = async () => {
-  return Contact.find();
-};
+// Отримати всі контакти
+export const getAllContacts = async () => Contact.find();
 
-export const getContactById = async (contactId) => {
-  return Contact.findById(contactId);
-};
+// Отримати контакт за id
+export const getContactById = async (contactId) => Contact.findById(contactId);
