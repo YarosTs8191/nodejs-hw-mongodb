@@ -1,14 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import apiRouter from './routes/api.js';
+import contactsRouter from './routes/contacts.js';
 
 export function setupServer() {
   const app = express();
   app.use(cors());
   app.use(pino());
   app.use(express.json());
-  app.use('/api', apiRouter);
+  app.use('/contacts', contactsRouter);
   app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });
   });
