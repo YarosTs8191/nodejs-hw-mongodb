@@ -1,5 +1,12 @@
-import { getAllContacts, getContactById } from '../services/contacts.js';
+import {
+  getAllContacts,
+  getContactById,
+  createContact,
+  updateContact,
+  deleteContact,
+} from '../services/contacts.js';
 
+// Отримати всі контакти
 export const getAllContactsController = async (req, res) => {
   try {
     const contacts = await getAllContacts();
@@ -16,6 +23,7 @@ export const getAllContactsController = async (req, res) => {
   }
 };
 
+// Отримати контакт за id
 export const getContactByIdController = async (req, res) => {
   try {
     const { contactId } = req.params;
@@ -35,5 +43,51 @@ export const getContactByIdController = async (req, res) => {
       status: 500,
       message: error.message,
     });
+  }
+};
+
+// Створити контакт/ POST
+export const createContactController = async (req, res, next) => {
+  try {
+    const newContact = await createContact(req.body);
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: newContact,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Оновити контакт / PATCH
+export const updateContactController = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const updatedContact = await updateContact(contactId, req.body);
+    if (!updatedContact) {
+      throw createError(404, 'Contact not found');
+    }
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully patched a contact!',
+      data: updatedContact,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Видалити контакт / DELETE
+export const deleteContactController = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const deletedContact = await deleteContact(contactId);
+    if (!deletedContact) {
+      throw createError(404, 'Contact not found');
+    }
+    res.status(204).send(); // No Content
+  } catch (error) {
+    next(error);
   }
 };
