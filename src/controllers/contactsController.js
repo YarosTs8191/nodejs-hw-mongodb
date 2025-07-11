@@ -28,6 +28,9 @@ export const getAllContactsController = async (req, res) => {
 export const getContactByIdController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      throw createError(404, 'Contact not found');
+    }
     const contact = await getContactById(contactId);
 
     if (!contact) {
