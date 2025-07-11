@@ -5,6 +5,7 @@ import {
   updateContact,
   deleteContact,
 } from '../services/contacts.js';
+import createError from 'http-errors';
 
 // Отримати всі контакти
 export const getAllContactsController = async (req, res) => {
@@ -24,13 +25,13 @@ export const getAllContactsController = async (req, res) => {
 };
 
 // Отримати контакт за id
-export const getContactByIdController = async (req, res) => {
+export const getContactByIdController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const contact = await getContactById(contactId);
 
     if (!contact) {
-      return res.status(404).json({ message: 'Contact not found' });
+      throw createError(404, 'Contact not found');
     }
 
     res.status(200).json({
@@ -39,10 +40,7 @@ export const getContactByIdController = async (req, res) => {
       data: contact,
     });
   } catch (error) {
-    res.status(500).json({
-      status: 500,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
