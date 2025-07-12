@@ -5,7 +5,8 @@ import {
   updateContact,
   deleteContact,
 } from '../services/contacts.js';
-import createError from 'http-errors';
+import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 
 // Отримати всі контакти
 export const getAllContactsController = async (req, res) => {
@@ -29,12 +30,13 @@ export const getContactByIdController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(contactId)) {
-      throw createError(404, 'Contact not found');
+      throw createHttpError(404, 'Contact not found');
     }
+
     const contact = await getContactById(contactId);
 
     if (!contact) {
-      throw createError(404, 'Contact not found');
+      throw createHttpError(404, 'Contact not found');
     }
 
     res.status(200).json({
