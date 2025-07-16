@@ -9,13 +9,21 @@ import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 
 // Отримати всі контакти
-export const getAllContactsController = async (req, res) => {
+export const getAllContactsController = async (req, res, next) => {
   try {
-    const contacts = await getAllContacts();
+    const { page, perPage, sortBy, sortOrder, type, isFavourite } = req.query;
+    const result = await getAllContacts({
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+      type,
+      isFavourite,
+    });
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+      data: result,
     });
   } catch (error) {
     res.status(500).json({
@@ -24,7 +32,6 @@ export const getAllContactsController = async (req, res) => {
     });
   }
 };
-
 // Отримати контакт за id
 export const getContactByIdController = async (req, res, next) => {
   try {
