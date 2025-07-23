@@ -13,23 +13,36 @@ import {
   createContactSchema,
   updateContactSchema,
 } from '../schemas/contacts.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
 // CRUD маршрути:
-router.get('/', ctrlWrapper(getAllContactsController));
-router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
+router.get('/', authenticate, ctrlWrapper(getAllContactsController));
+router.get(
+  '/:contactId',
+  authenticate,
+  isValidId,
+  ctrlWrapper(getContactByIdController),
+);
 router.post(
   '/',
+  authenticate,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 ); // Додати контакт
 router.patch(
   '/:contactId',
+  authenticate,
   isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
 ); // Оновити контакт
-router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
+router.delete(
+  '/:contactId',
+  authenticate,
+  isValidId,
+  ctrlWrapper(deleteContactController),
+);
 
 export default router;

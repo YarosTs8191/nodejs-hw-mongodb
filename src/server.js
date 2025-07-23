@@ -4,6 +4,7 @@ import pino from 'pino-http';
 import contactsRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import authRouter from './routers/auth.js';
 
 export function setupServer() {
   const app = express();
@@ -13,6 +14,7 @@ export function setupServer() {
   app.use('/contacts', contactsRouter);
   app.use(notFoundHandler);
   app.use(errorHandler);
+  app.use('/auth', authRouter);
 
   app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT || 3000}`);
