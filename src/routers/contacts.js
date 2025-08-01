@@ -14,6 +14,7 @@ import {
   updateContactSchema,
 } from '../schemas/contacts.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import upload from '../middlewares/upload.js';
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 ); // Додати контакт
@@ -35,6 +37,7 @@ router.patch(
   '/:contactId',
   authenticate,
   isValidId,
+  upload.single('photo'),
   validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
 ); // Оновити контакт

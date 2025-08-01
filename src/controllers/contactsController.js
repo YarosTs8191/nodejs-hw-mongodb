@@ -7,6 +7,9 @@ import {
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
+import fs from 'fs/promises';
+import { uploadToCloudinary } from '../services/cloudinary.js';
+import { v2 as cloudinary } from 'cloudinary';
 
 // Отримати всі контакти
 export const getAllContactsController = async (req, res) => {
@@ -65,6 +68,12 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
   try {
     const userId = req.user._id;
+    let photoUrl = '';
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file.path);
+      photoUrl = uploadResult.secure_url;
+      await fs.unlink(req.file.path); // чистимо tmp файл
+    }
     const newContact = await createContact(req.body, userId);
     res.status(201).json({
       status: 201,
@@ -81,6 +90,15 @@ export const updateContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const userId = req.user._id;
+
+    let photoUrl = '';
+
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file.path);
+      photoUrl = uploadResult.secure_url;
+      await fs.unlink(req.file.path); // чистимо tmp файл
+    }
+
     if (!mongoose.Types.ObjectId.isValid(contactId)) {
       throw createHttpError(404, 'Contact not found');
     }
