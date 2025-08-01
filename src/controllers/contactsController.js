@@ -70,11 +70,13 @@ export const createContactController = async (req, res, next) => {
     const userId = req.user._id;
     let photoUrl = '';
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(req.file.path);
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
       photoUrl = uploadResult.secure_url;
-      await fs.unlink(req.file.path); // чистимо tmp файл
     }
-    const newContact = await createContact(req.body, userId);
+    const newContact = await createContact(
+      { ...req.body, photo: photoUrl },
+      userId,
+    );
     res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
@@ -94,15 +96,15 @@ export const updateContactController = async (req, res, next) => {
     let photoUrl = '';
 
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(req.file.path);
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
       photoUrl = uploadResult.secure_url;
-      await fs.unlink(req.file.path); // чистимо tmp файл
     }
 
     if (!mongoose.Types.ObjectId.isValid(contactId)) {
       throw createHttpError(404, 'Contact not found');
     }
-    const updatedContact = await updateContact(contactId, req.body, userId);
+    const body = photoUrl ? { ...req.body, photo: photoUrl } : req.body;
+    const updatedContact = await updateContact(contactId, body, userId);
     if (!updatedContact) {
       throw createHttpError(404, 'Contact not found');
     }

@@ -6,9 +6,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadToCloudinary = async (path) => {
-  return cloudinary.uploader.upload(path, {
-    folder: 'contacts_photos', // або будь-яка твоя папка
-    transformation: [{ width: 400, height: 400, crop: 'limit' }],
+export const uploadToCloudinary = async (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'contacts_photos',
+        transformation: [{ width: 400, height: 400, crop: 'limit' }],
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      },
+    );
+    stream.end(buffer);
   });
 };
