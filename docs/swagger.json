@@ -1,0 +1,512 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Contact Book API",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "Контактна книга з авторизацією, можливістю завантаження фото та email-нотифікацією.\n"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://nodejs-hw-mongodb-kck1.onrender.com"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/contacts": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get all contacts",
+        "operationId": "getContacts",
+        "description": "Retrieve a list of all contacts for the authenticated user.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Number of contacts per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of contacts"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "post": {
+          "tags": [
+            "Contacts"
+          ],
+          "summary": "Додати новий контакт",
+          "operationId": "createContact",
+          "description": "Додає новий контакт у вашу контактну книгу.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phoneNumber": {
+                      "type": "string"
+                    },
+                    "contactType": {
+                      "type": "string"
+                    },
+                    "photo": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Контакт створено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "../../components/schemas/Contact.yaml"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "../../components/schemas/Error.yaml"
+            },
+            "401": {
+              "$ref": "../../components/schemas/Error.yaml"
+            }
+          }
+        }
+      }
+    },
+    "/contacts/{contactId}": {
+      "get": {
+        "get": {
+          "tags": [
+            "Contacts"
+          ],
+          "summary": "Get contact by ID",
+          "operationId": "getContactById",
+          "description": "Отримати детальну інформацію про контакт за його унікальним ідентифікатором.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "contactId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Унікальний ідентифікатор контакту"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успішно знайдено контакт",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "../../../components/schemas/Contact.yaml"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Контакт не знайдено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "../../../components/schemas/Error.yaml"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "patch": {
+          "tags": [
+            "Contacts"
+          ],
+          "summary": "Оновити контакт",
+          "operationId": "updateContact",
+          "description": "Оновлює контакт за його ID.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "contactId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID контакта"
+            }
+          ],
+          "requestBody": {
+            "required": false,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phoneNumber": {
+                      "type": "string"
+                    },
+                    "contactType": {
+                      "type": "string"
+                    },
+                    "photo": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Контакт оновлено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "../../components/schemas/Contact.yaml"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "../../components/schemas/Error.yaml"
+            },
+            "401": {
+              "$ref": "../../components/schemas/Error.yaml"
+            },
+            "404": {
+              "$ref": "../../components/schemas/Error.yaml"
+            }
+          }
+        }
+      },
+      "delete": {
+        "delete": {
+          "tags": [
+            "Contacts"
+          ],
+          "summary": "Видалити контакт",
+          "operationId": "deleteContact",
+          "description": "Видаляє контакт за його ID.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "contactId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID контакта"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Контакт видалено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "../../components/schemas/Contact.yaml"
+                  }
+                }
+              }
+            },
+            "401": {
+              "$ref": "../../components/schemas/Error.yaml"
+            },
+            "404": {
+              "$ref": "../../components/schemas/Error.yaml"
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "tags": [
+        "Auth"
+      ],
+      "summary": "Реєстрація нового користувача",
+      "operationId": "registerUser",
+      "description": "Створює нового користувача та відправляє email для підтвердження.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "johndoe@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "format": "password",
+                  "example": "StrongPass123"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Користувач успішно створений"
+        },
+        "400": {
+          "description": "Невірні дані запиту"
+        },
+        "409": {
+          "description": "Користувач з таким email вже існує"
+        }
+      }
+    },
+    "/auth/login": {
+      "tags": [
+        "Auth"
+      ],
+      "summary": "Логін користувача",
+      "operationId": "loginUser",
+      "description": "Авторизує користувача і повертає токени доступу та оновлення.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "email",
+                "password"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "johndoe@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "format": "password",
+                  "example": "StrongPass123"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Авторизація успішна"
+        },
+        "400": {
+          "description": "Невірні дані запиту"
+        },
+        "401": {
+          "description": "Невірний email або пароль"
+        }
+      }
+    },
+    "/auth/refresh": {
+      "tags": [
+        "Auth"
+      ],
+      "summary": "Оновлення токенів",
+      "operationId": "refreshTokens",
+      "description": "Повертає нові токени доступу та оновлення, використовуючи refresh token.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "refreshToken"
+              ],
+              "properties": {
+                "refreshToken": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Нові токени успішно видані"
+        },
+        "401": {
+          "description": "Невірний або прострочений refresh token"
+        }
+      }
+    },
+    "/auth/send-reset-email": {
+      "tags": [
+        "Auth"
+      ],
+      "summary": "Надіслати email для скидання пароля",
+      "operationId": "sendResetEmail",
+      "description": "Відправляє лист з посиланням для скидання пароля на вказану електронну адресу.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "email"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "johndoe@example.com"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Лист успішно відправлено"
+        },
+        "400": {
+          "description": "Невірні дані запиту"
+        },
+        "404": {
+          "description": "Користувач не знайдений"
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "tags": [
+        "Auth"
+      ],
+      "summary": "Скидання пароля користувача",
+      "operationId": "resetPassword",
+      "description": "Приймає токен з email та новий пароль для його оновлення.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "token",
+                "newPassword"
+              ],
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR..."
+                },
+                "newPassword": {
+                  "type": "string",
+                  "format": "password",
+                  "example": "NewStrongPass123"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Пароль успішно змінено"
+        },
+        "400": {
+          "description": "Невірні дані запиту"
+        },
+        "401": {
+          "description": "Невірний або прострочений токен"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

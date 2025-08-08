@@ -1,0 +1,28 @@
+get:
+  tags:
+    - Contacts
+  summary: Get contact by ID
+  operationId: getContactById
+  description: Отримати детальну інформацію про контакт за його унікальним ідентифікатором.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Унікальний ідентифікатор контакту
+  responses:
+    '200':
+      description: Успішно знайдено контакт
+      content:
+        application/json:
+          schema:
+            $ref: '../../../components/schemas/Contact.yaml'
+    '404':
+      description: Контакт не знайдено
+      content:
+        application/json:
+          schema:
+            $ref: '../../../components/schemas/Error.yaml'

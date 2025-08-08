@@ -1,0 +1,30 @@
+tags:
+  - Auth
+summary: Логін користувача
+operationId: loginUser
+description: Авторизує користувача і повертає токени доступу та оновлення.
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            format: email
+            example: johndoe@example.com
+          password:
+            type: string
+            format: password
+            example: StrongPass123
+responses:
+  '200':
+    description: Авторизація успішна
+  '400':
+    description: Невірні дані запиту
+  '401':
+    description: Невірний email або пароль

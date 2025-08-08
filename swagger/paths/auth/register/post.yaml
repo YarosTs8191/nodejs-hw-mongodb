@@ -1,0 +1,30 @@
+tags:
+  - Auth
+summary: Реєстрація нового користувача
+operationId: registerUser
+description: Створює нового користувача та відправляє email для підтвердження.
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: John Doe
+          email:
+            type: string
+            format: email
+            example: johndoe@example.com
+          password:
+            type: string
+            format: password
+            example: StrongPass123
+responses:
+  '201':
+    description: Користувач успішно створений
+  '400':
+    description: Невірні дані запиту
+  '409':
+    description: Користувач з таким email вже існує

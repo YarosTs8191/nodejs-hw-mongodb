@@ -1,0 +1,23 @@
+type: object
+properties:
+  _id:
+    type: string
+  name:
+    type: string
+    example: 'Test Contact'
+  email:
+    type: string
+    example: 'test@email.com'
+  phoneNumber:
+    type: string
+    example: '123456789'
+  contactType:
+    type: string
+    example: 'home'
+  photo:
+    type: string
+    example: 'https://res.cloudinary.com/demo/image/upload/contacts_photos/photo.jpg'
+required:
+  - name
+  - email
+  - phoneNumber

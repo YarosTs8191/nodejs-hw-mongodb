@@ -1,0 +1,46 @@
+patch:
+  tags:
+    - Contacts
+  summary: Оновити контакт
+  operationId: updateContact
+  description: Оновлює контакт за його ID.
+  security:
+    - bearerAuth: []
+  parameters:
+    - in: path
+      name: contactId
+      required: true
+      schema:
+        type: string
+      description: ID контакта
+  requestBody:
+    required: false
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phoneNumber:
+              type: string
+            contactType:
+              type: string
+            photo:
+              type: string
+              format: binary
+  responses:
+    '200':
+      description: Контакт оновлено
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/Contact.yaml
+    '400':
+      $ref: ../../components/schemas/Error.yaml
+    '401':
+      $ref: ../../components/schemas/Error.yaml
+    '404':
+      $ref: ../../components/schemas/Error.yaml
