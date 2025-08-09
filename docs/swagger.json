@@ -293,210 +293,220 @@
       }
     },
     "/auth/register": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Реєстрація нового користувача",
-      "operationId": "registerUser",
-      "description": "Створює нового користувача та відправляє email для підтвердження.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "John Doe"
-                },
-                "email": {
-                  "type": "string",
-                  "format": "email",
-                  "example": "johndoe@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "format": "password",
-                  "example": "StrongPass123"
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Реєстрація нового користувача",
+        "operationId": "registerUser",
+        "description": "Створює нового користувача та відправляє email для підтвердження.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "StrongPass123"
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "responses": {
-        "201": {
-          "description": "Користувач успішно створений"
         },
-        "400": {
-          "description": "Невірні дані запиту"
-        },
-        "409": {
-          "description": "Користувач з таким email вже існує"
+        "responses": {
+          "201": {
+            "description": "Користувач успішно створений"
+          },
+          "400": {
+            "description": "Невірні дані запиту"
+          },
+          "409": {
+            "description": "Користувач з таким email вже існує"
+          }
         }
       }
     },
     "/auth/login": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Логін користувача",
-      "operationId": "loginUser",
-      "description": "Авторизує користувача і повертає токени доступу та оновлення.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "email",
-                "password"
-              ],
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "format": "email",
-                  "example": "johndoe@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "format": "password",
-                  "example": "StrongPass123"
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Логін користувача",
+        "operationId": "loginUser",
+        "description": "Авторизує користувача і повертає токени доступу та оновлення.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "StrongPass123"
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Авторизація успішна"
         },
-        "400": {
-          "description": "Невірні дані запиту"
-        },
-        "401": {
-          "description": "Невірний email або пароль"
+        "responses": {
+          "200": {
+            "description": "Авторизація успішна"
+          },
+          "400": {
+            "description": "Невірні дані запиту"
+          },
+          "401": {
+            "description": "Невірний email або пароль"
+          }
         }
       }
     },
     "/auth/refresh": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Оновлення токенів",
-      "operationId": "refreshTokens",
-      "description": "Повертає нові токени доступу та оновлення, використовуючи refresh token.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "refreshToken"
-              ],
-              "properties": {
-                "refreshToken": {
-                  "type": "string",
-                  "example": "eyJhbGciOiJIUzI1NiIsInR..."
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Оновлення токенів",
+        "operationId": "refreshTokens",
+        "description": "Повертає нові токени доступу та оновлення, використовуючи refresh token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "refreshToken"
+                ],
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR..."
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Нові токени успішно видані"
         },
-        "401": {
-          "description": "Невірний або прострочений refresh token"
+        "responses": {
+          "200": {
+            "description": "Нові токени успішно видані"
+          },
+          "401": {
+            "description": "Невірний або прострочений refresh token"
+          }
         }
       }
     },
     "/auth/send-reset-email": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Надіслати email для скидання пароля",
-      "operationId": "sendResetEmail",
-      "description": "Відправляє лист з посиланням для скидання пароля на вказану електронну адресу.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "email"
-              ],
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "format": "email",
-                  "example": "johndoe@example.com"
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Надіслати email для скидання пароля",
+        "operationId": "sendResetEmail",
+        "description": "Відправляє лист з посиланням для скидання пароля на вказану електронну адресу.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "johndoe@example.com"
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Лист успішно відправлено"
         },
-        "400": {
-          "description": "Невірні дані запиту"
-        },
-        "404": {
-          "description": "Користувач не знайдений"
+        "responses": {
+          "200": {
+            "description": "Лист успішно відправлено"
+          },
+          "400": {
+            "description": "Невірні дані запиту"
+          },
+          "404": {
+            "description": "Користувач не знайдений"
+          }
         }
       }
     },
     "/auth/reset-password": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Скидання пароля користувача",
-      "operationId": "resetPassword",
-      "description": "Приймає токен з email та новий пароль для його оновлення.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "token",
-                "newPassword"
-              ],
-              "properties": {
-                "token": {
-                  "type": "string",
-                  "example": "eyJhbGciOiJIUzI1NiIsInR..."
-                },
-                "newPassword": {
-                  "type": "string",
-                  "format": "password",
-                  "example": "NewStrongPass123"
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Скидання пароля користувача",
+        "operationId": "resetPassword",
+        "description": "Приймає токен з email та новий пароль для його оновлення.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token",
+                  "newPassword"
+                ],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR..."
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "NewStrongPass123"
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Пароль успішно змінено"
         },
-        "400": {
-          "description": "Невірні дані запиту"
-        },
-        "401": {
-          "description": "Невірний або прострочений токен"
+        "responses": {
+          "200": {
+            "description": "Пароль успішно змінено"
+          },
+          "400": {
+            "description": "Невірні дані запиту"
+          },
+          "401": {
+            "description": "Невірний або прострочений токен"
+          }
         }
       }
     }
