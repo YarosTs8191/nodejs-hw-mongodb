@@ -1,46 +1,74 @@
-patch:
-  tags:
-    - Contacts
-  summary: Оновити контакт
-  operationId: updateContact
-  description: Оновлює контакт за його ID.
-  security:
-    - bearerAuth: []
-  parameters:
-    - in: path
-      name: contactId
-      required: true
+tags:
+  - Contacts
+summary: Update contact by ID
+operationId: updateContact
+description: >
+  Update fields of an existing contact by its unique ID.
+  Supports partial updates and file upload for the contact's photo.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    description: The unique ID of the contact to update
+    schema:
+      type: string
+requestBody:
+  required: false
+  content:
+    multipart/form-data:
       schema:
-        type: string
-      description: ID контакта
-  requestBody:
-    required: false
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: John Doe
+          phoneNumber:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: '+380671234567'
+          email:
+            type: string
+            format: email
+            minLength: 3
+            maxLength: 20
+            example: johndoe@example.com
+          isFavourite:
+            type: boolean
+            example: false
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: personal
+          photo:
+            type: string
+            format: binary
+responses:
+  '200':
+    description: Contact successfully updated
     content:
-      multipart/form-data:
+      application/json:
         schema:
-          type: object
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-            phoneNumber:
-              type: string
-            contactType:
-              type: string
-            photo:
-              type: string
-              format: binary
-  responses:
-    '200':
-      description: Контакт оновлено
-      content:
-        application/json:
-          schema:
-            $ref: ../../components/schemas/Contact.yaml
-    '400':
-      $ref: ../../components/schemas/Error.yaml
-    '401':
-      $ref: ../../components/schemas/Error.yaml
-    '404':
-      $ref: ../../components/schemas/Error.yaml
+          $ref: ../../../components/schemas/Contact.yaml
+  '400':
+    description: Invalid request body or ID
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Error.yaml
+  '401':
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Error.yaml
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Error.yaml

@@ -1,26 +1,45 @@
-delete:
-  tags:
-    - Contacts
-  summary: Видалити контакт
-  operationId: deleteContact
-  description: Видаляє контакт за його ID.
-  security:
-    - bearerAuth: []
-  parameters:
-    - in: path
-      name: contactId
-      required: true
-      schema:
-        type: string
-      description: ID контакта
-  responses:
-    '200':
-      description: Контакт видалено
-      content:
-        application/json:
-          schema:
-            $ref: ../../components/schemas/Contact.yaml
-    '401':
-      $ref: ../../components/schemas/Error.yaml
-    '404':
-      $ref: ../../components/schemas/Error.yaml
+tags:
+  - Contacts
+summary: Delete contact by ID
+operationId: deleteContact
+description: >
+  Permanently delete a contact by its unique ID.
+  Requires authentication and a valid contact ID.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    description: The unique ID of the contact to delete
+    schema:
+      type: string
+responses:
+  '200':
+    description: Contact successfully deleted
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Contact deleted successfully
+  '400':
+    description: Invalid ID format
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Error.yaml
+  '401':
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Error.yaml
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Error.yaml

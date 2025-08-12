@@ -5,7 +5,7 @@ properties:
     example: 404
   message:
     type: string
-    example: Not found
-  data:
-    type: object
-    example: {}
+    example: Contact not found
+required:
+  - status
+  - message

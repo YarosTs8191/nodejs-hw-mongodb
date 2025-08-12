@@ -1,0 +1,37 @@
+post:
+  tags: [Auth]
+  summary: Refresh tokens
+  operationId: refreshTokens
+  description: >
+    Generate new access and refresh tokens using a valid refresh token.
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [refreshToken]
+          properties:
+            refreshToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR...
+  responses:
+    '200':
+      description: New tokens issued
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+              refreshToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    '401':
+      description: Invalid or expired refresh token
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }

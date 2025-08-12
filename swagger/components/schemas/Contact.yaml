@@ -2,22 +2,47 @@ type: object
 properties:
   _id:
     type: string
+    example: 64b2f6f2a2d9b5c1d4a12345
   name:
     type: string
-    example: 'Test Contact'
+    minLength: 3
+    maxLength: 20
+    example: John Doe
   email:
     type: string
-    example: 'test@email.com'
+    format: email
+    minLength: 3
+    maxLength: 20
+    example: johndoe@example.com
   phoneNumber:
     type: string
-    example: '123456789'
+    minLength: 3
+    maxLength: 20
+    example: '+380671234567'
   contactType:
     type: string
-    example: 'home'
+    enum: [work, home, personal]
+    example: personal
+  isFavourite:
+    type: boolean
+    example: false
   photo:
     type: string
-    example: 'https://res.cloudinary.com/demo/image/upload/contacts_photos/photo.jpg'
+    format: uri
+    example: https://res.cloudinary.com/demo/image/upload/v1691234567/contacts_photos/sample.jpg
+  createdAt:
+    type: string
+    format: date-time
+    example: 2024-08-10T12:34:56.789Z
+  updatedAt:
+    type: string
+    format: date-time
+    example: 2024-08-10T12:34:56.789Z
 required:
+  - _id
   - name
-  - email
   - phoneNumber
+  - contactType
+  - isFavourite
+  - createdAt
+  - updatedAt

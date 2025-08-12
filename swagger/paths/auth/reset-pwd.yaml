@@ -1,0 +1,44 @@
+post:
+  tags: [Auth]
+  summary: Reset user password
+  operationId: resetPassword
+  description: >
+    Reset the user's password using the token sent to their email.
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [token, password]
+          properties:
+            token:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR...
+            password:
+              type: string
+              minLength: 6
+              maxLength: 100
+              example: NewStrongPass123
+  responses:
+    '200':
+      description: Password successfully reset
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Password has been reset successfully
+    '400':
+      description: Invalid request body
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }
+    '401':
+      description: Invalid or expired token
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }

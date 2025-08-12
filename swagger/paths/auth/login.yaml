@@ -1,0 +1,49 @@
+post:
+  tags: [Auth]
+  summary: User login
+  operationId: loginUser
+  description: >
+    Authenticate a user using email and password.  
+    Returns access and refresh tokens if credentials are valid.
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [email, password]
+          properties:
+            email:
+              type: string
+              format: email
+              example: johndoe@example.com
+            password:
+              type: string
+              minLength: 6
+              maxLength: 100
+              example: StrongPass123
+  responses:
+    '200':
+      description: Successful login
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+              refreshToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    '400':
+      description: Invalid request body
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }
+    '401':
+      description: Invalid email or password
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }

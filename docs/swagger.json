@@ -7,308 +7,59 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "Контактна книга з авторизацією, можливістю завантаження фото та email-нотифікацією.\n"
+    "description": "API для роботи з контактною книгою.  Містить CRUD-операції для контактів та ендпоінти для авторизації користувачів, включаючи реєстрацію, логін, оновлення токенів, вихід та скидання пароля.\n"
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "http://localhost:3000",
+      "description": "Локальний сервер"
     },
     {
-      "url": "https://nodejs-hw-mongodb-kck1.onrender.com"
+      "url": "https://nodejs-hw-mongodb-kck1.onrender.com",
+      "description": "Продакшн-сервер (Render)"
     }
   ],
-  "tags": [],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Ендпоінти для авторизації та автентифікації користувачів."
+    },
+    {
+      "name": "Contacts",
+      "description": "Ендпоінти для управління контактами."
+    }
+  ],
   "paths": {
-    "/contacts": {
-      "get": {
-        "tags": [
-          "Contacts"
-        ],
-        "summary": "Get all contacts",
-        "operationId": "getContacts",
-        "description": "Retrieve a list of all contacts for the authenticated user.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "description": "Page number for pagination"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "description": "Number of contacts per page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A list of contacts"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      },
-      "post": {
-        "post": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Додати новий контакт",
-          "operationId": "createContact",
-          "description": "Додає новий контакт у вашу контактну книгу.",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "phoneNumber": {
-                      "type": "string"
-                    },
-                    "contactType": {
-                      "type": "string"
-                    },
-                    "photo": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Контакт створено",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "../../components/schemas/Contact.yaml"
-                  }
-                }
-              }
-            },
-            "400": {
-              "$ref": "../../components/schemas/Error.yaml"
-            },
-            "401": {
-              "$ref": "../../components/schemas/Error.yaml"
-            }
-          }
-        }
-      }
-    },
-    "/contacts/{contactId}": {
-      "get": {
-        "get": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Get contact by ID",
-          "operationId": "getContactById",
-          "description": "Отримати детальну інформацію про контакт за його унікальним ідентифікатором.",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "contactId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "Унікальний ідентифікатор контакту"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успішно знайдено контакт",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "../../../components/schemas/Contact.yaml"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Контакт не знайдено",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "../../../components/schemas/Error.yaml"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "patch": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Оновити контакт",
-          "operationId": "updateContact",
-          "description": "Оновлює контакт за його ID.",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "contactId",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "ID контакта"
-            }
-          ],
-          "requestBody": {
-            "required": false,
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "phoneNumber": {
-                      "type": "string"
-                    },
-                    "contactType": {
-                      "type": "string"
-                    },
-                    "photo": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Контакт оновлено",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "../../components/schemas/Contact.yaml"
-                  }
-                }
-              }
-            },
-            "400": {
-              "$ref": "../../components/schemas/Error.yaml"
-            },
-            "401": {
-              "$ref": "../../components/schemas/Error.yaml"
-            },
-            "404": {
-              "$ref": "../../components/schemas/Error.yaml"
-            }
-          }
-        }
-      },
-      "delete": {
-        "delete": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Видалити контакт",
-          "operationId": "deleteContact",
-          "description": "Видаляє контакт за його ID.",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "contactId",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "ID контакта"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Контакт видалено",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "../../components/schemas/Contact.yaml"
-                  }
-                }
-              }
-            },
-            "401": {
-              "$ref": "../../components/schemas/Error.yaml"
-            },
-            "404": {
-              "$ref": "../../components/schemas/Error.yaml"
-            }
-          }
-        }
-      }
-    },
     "/auth/register": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "summary": "Реєстрація нового користувача",
+        "summary": "Register a new user",
         "operationId": "registerUser",
-        "description": "Створює нового користувача та відправляє email для підтвердження.",
+        "description": "Create a new user account.   Requires a name, email, and password.   The email must be unique and in a valid format.\n",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
                 "properties": {
                   "name": {
                     "type": "string",
+                    "minLength": 3,
+                    "maxLength": 20,
                     "example": "John Doe"
                   },
                   "email": {
@@ -318,7 +69,8 @@
                   },
                   "password": {
                     "type": "string",
-                    "format": "password",
+                    "minLength": 6,
+                    "maxLength": 100,
                     "example": "StrongPass123"
                   }
                 }
@@ -328,13 +80,40 @@
         },
         "responses": {
           "201": {
-            "description": "Користувач успішно створений"
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Registration successful. Please verify your email."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Невірні дані запиту"
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "409": {
-            "description": "Користувач з таким email вже існує"
+            "description": "Email already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -344,9 +123,10 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Логін користувача",
+        "summary": "User login",
         "operationId": "loginUser",
-        "description": "Авторизує користувача і повертає токени доступу та оновлення.",
+        "description": "Authenticate a user using email and password.   Returns access and refresh tokens if credentials are valid.\n",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -365,7 +145,8 @@
                   },
                   "password": {
                     "type": "string",
-                    "format": "password",
+                    "minLength": 6,
+                    "maxLength": 100,
                     "example": "StrongPass123"
                   }
                 }
@@ -375,13 +156,44 @@
         },
         "responses": {
           "200": {
-            "description": "Авторизація успішна"
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Невірні дані запиту"
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Невірний email або пароль"
+            "description": "Invalid email or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -391,9 +203,10 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Оновлення токенів",
+        "summary": "Refresh tokens",
         "operationId": "refreshTokens",
-        "description": "Повертає нові токени доступу та оновлення, використовуючи refresh token.",
+        "description": "Generate new access and refresh tokens using a valid refresh token.\n",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -415,10 +228,77 @@
         },
         "responses": {
           "200": {
-            "description": "Нові токени успішно видані"
+            "description": "New tokens issued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
-            "description": "Невірний або прострочений refresh token"
+            "description": "Invalid or expired refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logout user",
+        "operationId": "logoutUser",
+        "description": "Log out the currently authenticated user by invalidating the refresh token.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Logout successful"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -428,9 +308,10 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Надіслати email для скидання пароля",
+        "summary": "Send password reset email",
         "operationId": "sendResetEmail",
-        "description": "Відправляє лист з посиланням для скидання пароля на вказану електронну адресу.",
+        "description": "Send an email with a password reset link to the specified email address.\n",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -453,25 +334,53 @@
         },
         "responses": {
           "200": {
-            "description": "Лист успішно відправлено"
+            "description": "Password reset email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Reset email sent successfully"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Невірні дані запиту"
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Користувач не знайдений"
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/auth/reset-password": {
+    "/auth/reset-pwd": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "summary": "Скидання пароля користувача",
+        "summary": "Reset user password",
         "operationId": "resetPassword",
-        "description": "Приймає токен з email та новий пароль для його оновлення.",
+        "description": "Reset the user's password using the token sent to their email.\n",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -480,16 +389,17 @@
                 "type": "object",
                 "required": [
                   "token",
-                  "newPassword"
+                  "password"
                 ],
                 "properties": {
                   "token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR..."
                   },
-                  "newPassword": {
+                  "password": {
                     "type": "string",
-                    "format": "password",
+                    "minLength": 6,
+                    "maxLength": 100,
                     "example": "NewStrongPass123"
                   }
                 }
@@ -499,13 +409,444 @@
         },
         "responses": {
           "200": {
-            "description": "Пароль успішно змінено"
+            "description": "Password successfully reset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Password has been reset successfully"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Невірні дані запиту"
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Невірний або прострочений токен"
+            "description": "Invalid or expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contacts": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get all contacts",
+        "operationId": "getAllContacts",
+        "description": "Retrieve a paginated list of contacts for the authenticated user. Use query parameters `page` and `limit` to control pagination.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "description": "Page number (starts from 1)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of contacts (paginated)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Contact"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create a new contact",
+        "operationId": "createContact",
+        "description": "Add a new contact to the authenticated user's contact book. This endpoint supports file upload for a contact's photo.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "contactType"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "+380671234567"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "johndoe@example.com"
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contacts/{contactId}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "contactId",
+          "required": true,
+          "description": "The unique ID of the contact",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get contact by ID",
+        "operationId": "getContactById",
+        "description": "Retrieve a single contact by its unique ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Update contact by ID",
+        "operationId": "updateContact",
+        "description": "Update fields of an existing contact by its unique ID. Supports partial updates and file upload for the contact's photo.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "+380671234567"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "johndoe@example.com"
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete contact by ID",
+        "operationId": "deleteContact",
+        "description": "Permanently delete a contact by its unique ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -515,7 +856,92 @@
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64b2f6f2a2d9b5c1d4a12345"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20,
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 3,
+            "maxLength": 20,
+            "example": "johndoe@example.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20,
+            "example": "+380671234567"
+          },
+          "contactType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "example": "personal"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "example": false
+          },
+          "photo": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://res.cloudinary.com/demo/image/upload/v1691234567/contacts_photos/sample.jpg"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-10T12:34:56.789Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-10T12:34:56.789Z"
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "phoneNumber",
+          "contactType",
+          "isFavourite",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 404
+          },
+          "message": {
+            "type": "string",
+            "example": "Contact not found"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
       }
     }
   }

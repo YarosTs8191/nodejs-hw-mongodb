@@ -1,0 +1,99 @@
+get:
+  tags: [Contacts]
+  summary: Get all contacts
+  operationId: getAllContacts
+  description: >
+    Retrieve a paginated list of contacts for the authenticated user.
+    Use query parameters `page` and `limit` to control pagination.
+  security:
+    - bearerAuth: []
+  parameters:
+    - in: query
+      name: page
+      required: false
+      description: Page number (starts from 1)
+      schema: { type: integer, minimum: 1, default: 1 }
+    - in: query
+      name: limit
+      required: false
+      description: Number of items per page
+      schema: { type: integer, minimum: 1, default: 10 }
+  responses:
+    '200':
+      description: A list of contacts (paginated)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../components/schemas/Contact.yaml
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }
+
+post:
+  tags: [Contacts]
+  summary: Create a new contact
+  operationId: createContact
+  description: >
+    Add a new contact to the authenticated user's contact book.
+    This endpoint supports file upload for a contact's photo.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          required: [name, phoneNumber, contactType]
+          properties:
+            name:
+              type: string
+              minLength: 3
+              maxLength: 20
+              example: John Doe
+            phoneNumber:
+              type: string
+              minLength: 3
+              maxLength: 20
+              example: '+380671234567'
+            email:
+              type: string
+              format: email
+              minLength: 3
+              maxLength: 20
+              example: johndoe@example.com
+            isFavourite:
+              type: boolean
+              example: false
+            contactType:
+              type: string
+              enum: [work, home, personal]
+              example: personal
+            photo:
+              type: string
+              format: binary
+  responses:
+    '201':
+      description: Contact successfully created
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Contact.yaml }
+    '400':
+      description: Invalid request body
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema: { $ref: ../../components/schemas/Error.yaml }
