@@ -14,10 +14,21 @@ get:
     - bearerAuth: []
   responses:
     '200':
-      description: Contact found
+      description: Contact found (wrapped)
       content:
         application/json:
-          schema: { $ref: ../../../components/schemas/Contact.yaml }
+          schema:
+            type: object
+            required: [status, message, data]
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Successfully found contact!
+              data:
+                $ref: ../../../components/schemas/Contact.yaml
     '400':
       description: Invalid ID format
       content:
@@ -54,34 +65,40 @@ patch:
               type: string
               minLength: 3
               maxLength: 20
-              example: John Doe
             phoneNumber:
               type: string
               minLength: 3
               maxLength: 20
-              example: '+380671234567'
             email:
               type: string
               format: email
               minLength: 3
               maxLength: 20
-              example: johndoe@example.com
             isFavourite:
               type: boolean
-              example: false
             contactType:
               type: string
               enum: [work, home, personal]
-              example: personal
             photo:
               type: string
               format: binary
   responses:
     '200':
-      description: Contact successfully updated
+      description: Contact updated (wrapped)
       content:
         application/json:
-          schema: { $ref: ../../../components/schemas/Contact.yaml }
+          schema:
+            type: object
+            required: [status, message, data]
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Successfully patched a contact!
+              data:
+                $ref: ../../../components/schemas/Contact.yaml
     '400':
       description: Invalid request body or ID
       content:
@@ -106,16 +123,8 @@ delete:
   security:
     - bearerAuth: []
   responses:
-    '200':
-      description: Contact successfully deleted
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Contact deleted successfully
+    '204':
+      description: No Content (contact deleted)
     '400':
       description: Invalid ID format
       content:
